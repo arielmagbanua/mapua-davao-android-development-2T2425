@@ -16,11 +16,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.state.ui.theme.StateTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,19 +54,31 @@ fun StateCounter(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var step by rememberSaveable { mutableIntStateOf(0) }
+
         Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = "The counter will increment by 1")
+            Text(text = "The counter will increment by $step")
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = "1",
-                onValueChange = {}
+                value = step.toString(),
+                onValueChange = {
+                    if (it.isEmpty() || it.isBlank()) {
+                        step = 0
+                    } else {
+                        step = it.toIntOrNull() ?: step
+                    }
+                }
             )
         }
 
-        Text(text = "The counter is 0")
+        var incrementValue by rememberSaveable { mutableIntStateOf(0) }
 
-        Button(onClick = {}) {
+        Text(text = "The counter is $incrementValue")
+
+        Button(onClick = {
+            incrementValue += step
+        }) {
             Text("Increment")
         }
     }
