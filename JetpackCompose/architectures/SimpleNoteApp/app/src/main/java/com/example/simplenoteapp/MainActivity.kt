@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -27,63 +29,61 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHost
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
+import com.example.simplenoteapp.modules.auth.ui.LoginScreen
+import com.example.simplenoteapp.modules.auth.ui.RegistrationScreen
+import com.example.simplenoteapp.modules.notes.ui.NoteListScreen
 import com.example.simplenoteapp.ui.theme.SimpleNoteAppTheme
+import kotlin.properties.ReadOnlyProperty
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val authViewModel: AuthViewModel by viewModels()
+
             SimpleNoteAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(modifier = Modifier.padding(innerPadding))
+                    val authState = authViewModel.uiState.collectAsState()
+                    val authEmail = authState.value.email
+
+                    val navController = rememberNavController()
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = if (authEmail.isNullOrEmpty()) "login" else "notes-list"
+                    ) {
+                        composable("login") {
+                            LoginScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                authViewModel = authViewModel
+                            )
+                        }
+
+                        composable("notes-list") {
+                            NoteListScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                authViewModel = authViewModel,
+                                navController = navController
+                            )
+                        }
+
+                        composable("registration") {
+                            RegistrationScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                authViewModel = authViewModel,
+                                navController = navController
+                            )
+                        }
+                    }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
-    Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Login", style = MaterialTheme.typography.headlineMedium)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(modifier = Modifier.fillMaxWidth(), onClick = {}) {
-            Text(text = "Login")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {}) {
-            Text(text = "Sign Up")
         }
     }
 }
@@ -92,6 +92,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     SimpleNoteAppTheme {
-        LoginScreen()
+        // LoginScreen()
     }
 }
