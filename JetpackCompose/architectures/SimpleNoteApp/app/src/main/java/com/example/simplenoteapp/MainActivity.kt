@@ -5,13 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 import com.example.simplenoteapp.modules.auth.ui.LoginScreen
 import com.example.simplenoteapp.modules.auth.ui.RegistrationScreen
+import com.example.simplenoteapp.modules.notes.ui.NoteScreen
 import com.example.simplenoteapp.modules.notes.ui.NoteListScreen
 import com.example.simplenoteapp.ui.theme.SimpleNoteAppTheme
 
@@ -30,39 +27,41 @@ class MainActivity : ComponentActivity() {
             val authViewModel: AuthViewModel by viewModels()
 
             SimpleNoteAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val authState by authViewModel.uiState.collectAsState()
-                    val authEmail = authState.email
+                val authState by authViewModel.uiState.collectAsState()
+                val authEmail = authState.email
 
-                    val navController = rememberNavController()
+                val navController = rememberNavController()
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = if (authEmail.isNullOrEmpty()) "login" else "notes-list"
-                    ) {
-                        composable("login") {
-                            LoginScreen(
-                                modifier = Modifier.padding(innerPadding),
-                                navController = navController,
-                                authViewModel = authViewModel
-                            )
-                        }
+                NavHost(
+                    navController = navController,
+                    startDestination = if (authEmail.isNullOrEmpty()) "login" else "notes-list"
+                ) {
+                    composable("login") {
+                        LoginScreen(
+                            navController = navController,
+                            authViewModel = authViewModel
+                        )
+                    }
 
-                        composable("notes-list") {
-                            NoteListScreen(
-                                modifier = Modifier.padding(innerPadding),
-                                authViewModel = authViewModel,
-                                navController = navController
-                            )
-                        }
+                    composable("notes-list") {
+                        NoteListScreen(
+                            authViewModel = authViewModel,
+                            navController = navController
+                        )
+                    }
 
-                        composable("registration") {
-                            RegistrationScreen(
-                                modifier = Modifier.padding(innerPadding),
-                                authViewModel = authViewModel,
-                                navController = navController
-                            )
-                        }
+                    composable("registration") {
+                        RegistrationScreen(
+                            authViewModel = authViewModel,
+                            navController = navController
+                        )
+                    }
+
+                    composable("note") {
+                        NoteScreen(
+                            authViewModel = authViewModel,
+                            navController = navController
+                        )
                     }
                 }
             }
