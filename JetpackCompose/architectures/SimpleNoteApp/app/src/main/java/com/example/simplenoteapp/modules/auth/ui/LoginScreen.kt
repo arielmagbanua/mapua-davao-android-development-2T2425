@@ -19,17 +19,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    authViewModel: AuthViewModel
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val appContext = LocalContext.current
+
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -57,14 +67,28 @@ fun LoginScreen(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(modifier = Modifier.fillMaxWidth(), onClick = {
-            authViewModel.login(email, password)
+            authViewModel.signInUserWithEmailAndPassword(email, password)
         }) {
             Text(text = "Login")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {}) {
+        // Google sign-in button
+        Button(
+            onClick = {
+                authViewModel.signInWithGoogle(appContext)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(modifier = Modifier.padding(start = 8.dp), text = "Sign in with Google")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {
+            navController.navigate("registration")
+        }) {
             Text(text = "Sign Up")
         }
     }
