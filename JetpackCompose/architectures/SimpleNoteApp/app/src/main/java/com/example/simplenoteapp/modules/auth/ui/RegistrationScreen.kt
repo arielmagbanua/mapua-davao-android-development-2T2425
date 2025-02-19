@@ -66,6 +66,9 @@ fun RegistrationScreen(
                 authViewModel.registerUser(email, password)
 
                 navController.popBackStack()
+
+                // or pop back to specific route
+                // navController.popBackStack("login", inclusive = false)
             }) {
             Text(text = "Register")
         }
