@@ -40,7 +40,11 @@ fun ResponsiveLazyGrid(modifier: Modifier = Modifier, notes: List<HashMap<String
         contentPadding = PaddingValues(24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(notes) { note ->
+        items(
+            items = notes,
+            // set the id as key so that the grid can track the items
+            key = { note -> note["id"].toString() }
+        ) { note ->
             NoteCard(note)
         }
     }
@@ -73,7 +77,7 @@ fun NoteCard(note: HashMap<String, Any?>) {
 
             val content = note["content"].toString()
             if (content.length > 300 && !isToggled) {
-                Text(note["content"].toString().take(300) + "...")
+                Text(note["content"].toString().take(300) + " ...")
             } else {
                 Text(note["content"].toString())
             }
