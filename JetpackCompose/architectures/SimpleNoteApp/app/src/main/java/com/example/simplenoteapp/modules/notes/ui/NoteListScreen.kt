@@ -19,6 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
@@ -28,6 +30,7 @@ import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 fun NoteListScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
+    notesViewModel: NotesViewModel,
     navController: NavController
 ) {
     Scaffold(
@@ -65,6 +68,12 @@ fun NoteListScreen(
             }
         }
     ) { innerPadding ->
+        val authState by authViewModel.uiState.collectAsState()
+
+        notesViewModel.getNotes(authState.email.toString()) { notes ->
+
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
