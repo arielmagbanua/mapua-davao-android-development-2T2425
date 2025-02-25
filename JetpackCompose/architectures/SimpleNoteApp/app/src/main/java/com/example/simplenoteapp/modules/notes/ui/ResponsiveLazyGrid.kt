@@ -40,7 +40,11 @@ fun ResponsiveLazyGrid(modifier: Modifier = Modifier, notes: List<HashMap<String
         contentPadding = PaddingValues(24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(notes) { note ->
+        items(
+            items = notes,
+            // set the id as key so that the grid can track the items
+            key = { note -> note["id"].toString() }
+        ) { note ->
             NoteCard(note)
         }
     }

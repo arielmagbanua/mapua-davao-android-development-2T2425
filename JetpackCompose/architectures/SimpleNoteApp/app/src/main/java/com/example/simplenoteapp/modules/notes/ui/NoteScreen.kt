@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -31,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
@@ -80,7 +83,7 @@ fun NoteScreen(
                         "owner" to authSate.email.toString()
                     )
 
-                    // TODO: save the note
+                    // save the note
                     notesViewModel.addNote(note)
 
                     // pop back to previous page
@@ -102,7 +105,10 @@ fun NoteScreen(
                 value = title,
                 onValueChange = { title = it },
                 label = { Text("Title") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -113,7 +119,10 @@ fun NoteScreen(
                 label = { Text("Content") },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 5,
-                maxLines = 10
+                maxLines = 10,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                )
             )
         }
     }
