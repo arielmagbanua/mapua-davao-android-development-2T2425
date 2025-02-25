@@ -12,8 +12,6 @@ class NotesViewModel: ViewModel() {
         db.collection("notes").add(note)
             .addOnSuccessListener { docRef ->
                 Log.d("NOTE", "id: ${docRef.id}")
-                // Log.d("NOTE", "title: ${docRef.get().result.get("title")}")
-                // Log.d("NOTE", "content: ${docRef.get().result.get("content")}")
             }
     }
 
