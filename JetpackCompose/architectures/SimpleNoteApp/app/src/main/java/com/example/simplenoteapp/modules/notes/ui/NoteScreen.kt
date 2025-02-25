@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,8 +40,12 @@ import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 fun NoteScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
+    notesViewModel: NotesViewModel,
     navController: NavController
 ) {
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -65,9 +70,18 @@ fun NoteScreen(
             )
         },
         floatingActionButton = {
+            val authSate by authViewModel.uiState.collectAsState()
+
             FloatingActionButton(
                 onClick = {
+                    val note = hashMapOf<String, String>(
+                        "title" to title,
+                        "content" to content,
+                        "owner" to authSate.email.toString()
+                    )
+
                     // TODO: save the note
+                    notesViewModel.addNote(note)
 
                     // pop back to previous page
                     navController.popBackStack()
@@ -84,9 +98,6 @@ fun NoteScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var title by remember { mutableStateOf("") }
-            var content by remember { mutableStateOf("") }
-
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },

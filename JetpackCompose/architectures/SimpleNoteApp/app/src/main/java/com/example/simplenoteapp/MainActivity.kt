@@ -17,6 +17,7 @@ import com.example.simplenoteapp.modules.auth.ui.LoginScreen
 import com.example.simplenoteapp.modules.auth.ui.RegistrationScreen
 import com.example.simplenoteapp.modules.notes.ui.NoteScreen
 import com.example.simplenoteapp.modules.notes.ui.NoteListScreen
+import com.example.simplenoteapp.modules.notes.ui.NotesViewModel
 import com.example.simplenoteapp.ui.theme.SimpleNoteAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val authViewModel: AuthViewModel by viewModels()
+            val notesViewModel: NotesViewModel by viewModels()
 
             SimpleNoteAppTheme {
                 val authState by authViewModel.uiState.collectAsState()
@@ -46,7 +48,8 @@ class MainActivity : ComponentActivity() {
                     composable("notes-list") {
                         NoteListScreen(
                             authViewModel = authViewModel,
-                            navController = navController
+                            navController = navController,
+                            notesViewModel = notesViewModel
                         )
                     }
 
@@ -60,7 +63,8 @@ class MainActivity : ComponentActivity() {
                     composable("note") {
                         NoteScreen(
                             authViewModel = authViewModel,
-                            navController = navController
+                            navController = navController,
+                            notesViewModel = notesViewModel
                         )
                     }
                 }
