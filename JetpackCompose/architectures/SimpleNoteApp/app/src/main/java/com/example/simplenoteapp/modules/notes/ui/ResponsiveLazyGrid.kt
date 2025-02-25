@@ -77,7 +77,7 @@ fun NoteCard(note: HashMap<String, Any?>) {
 
             val content = note["content"].toString()
             if (content.length > 300 && !isToggled) {
-                Text(note["content"].toString().take(300) + "...")
+                Text(note["content"].toString().take(300) + " ...")
             } else {
                 Text(note["content"].toString())
             }
