@@ -31,11 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.simplenoteapp.modules.notes.data.Note
 
 @Composable
 fun ResponsiveLazyGrid(
     modifier: Modifier = Modifier,
-    notes: List<HashMap<String, Any?>>,
+    notes: List<Note>,
     notesViewModel: NotesViewModel,
     navController: NavController
 ) {
@@ -49,7 +50,7 @@ fun ResponsiveLazyGrid(
         items(
             items = notes,
             // set the id as key so that the grid can track the items
-            key = { note -> note["id"].toString() }
+            key = { note -> note.id.toString() }
         ) { note ->
             NoteCard(note, notesViewModel, navController)
         }
@@ -57,7 +58,7 @@ fun ResponsiveLazyGrid(
 }
 
 @Composable
-fun NoteCard(note: HashMap<String, Any?>, notesViewModel: NotesViewModel, navController: NavController) {
+fun NoteCard(note: Note, notesViewModel: NotesViewModel, navController: NavController) {
     var isToggled by remember { mutableStateOf(false) }
 
     ElevatedCard(
@@ -79,21 +80,20 @@ fun NoteCard(note: HashMap<String, Any?>, notesViewModel: NotesViewModel, navCon
                 .padding(8.dp)
         ) {
             Header(
-                title = note["title"].toString(),
+                title = note.title,
                 onDelete = {
-                    notesViewModel.deleteNote(note["id"].toString())
+                    notesViewModel.deleteNote(note.id.toString())
                 },
                 onEdit = {
-                    navController.navigate("note/${note["id"].toString()}");
+                    navController.navigate("note/${note.id.toString()}");
                 }
             )
             Spacer(modifier = Modifier.height(4.dp))
 
-            val content = note["content"].toString()
-            if (content.length > 300 && !isToggled) {
-                Text(note["content"].toString().take(300) + " ...")
+            if (note.content.length > 300 && !isToggled) {
+                Text(note.content.take(300) + " ...")
             } else {
-                Text(note["content"].toString())
+                Text(note.content)
             }
         }
     }
