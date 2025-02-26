@@ -81,7 +81,12 @@ fun NoteListScreen(
             updatedNotes = notes
         }
 
-        ResponsiveLazyGrid(modifier = Modifier.padding(innerPadding), notes = updatedNotes)
+        ResponsiveLazyGrid(
+            modifier = Modifier.padding(innerPadding),
+            notes = updatedNotes,
+            notesViewModel = notesViewModel,
+            navController = navController
+        )
     }
 
 }

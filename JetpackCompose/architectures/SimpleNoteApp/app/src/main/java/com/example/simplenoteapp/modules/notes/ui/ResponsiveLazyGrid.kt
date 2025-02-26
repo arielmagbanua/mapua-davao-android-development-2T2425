@@ -30,9 +30,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun ResponsiveLazyGrid(modifier: Modifier = Modifier, notes: List<HashMap<String, Any?>>) {
+fun ResponsiveLazyGrid(
+    modifier: Modifier = Modifier,
+    notes: List<HashMap<String, Any?>>,
+    notesViewModel: NotesViewModel,
+    navController: NavController
+) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(250.dp),
         verticalItemSpacing = 16.dp,
@@ -45,13 +51,13 @@ fun ResponsiveLazyGrid(modifier: Modifier = Modifier, notes: List<HashMap<String
             // set the id as key so that the grid can track the items
             key = { note -> note["id"].toString() }
         ) { note ->
-            NoteCard(note)
+            NoteCard(note, notesViewModel, navController)
         }
     }
 }
 
 @Composable
-fun NoteCard(note: HashMap<String, Any?>) {
+fun NoteCard(note: HashMap<String, Any?>, notesViewModel: NotesViewModel, navController: NavController) {
     var isToggled by remember { mutableStateOf(false) }
 
     ElevatedCard(
@@ -72,7 +78,15 @@ fun NoteCard(note: HashMap<String, Any?>) {
                 .fillMaxSize()
                 .padding(8.dp)
         ) {
-            Header(title = note["title"].toString())
+            Header(
+                title = note["title"].toString(),
+                onDelete = {
+                    notesViewModel.deleteNote(note["id"].toString())
+                },
+                onEdit = {
+                    navController.navigate("note/${note["id"].toString()}");
+                }
+            )
             Spacer(modifier = Modifier.height(4.dp))
 
             val content = note["content"].toString()
@@ -86,7 +100,7 @@ fun NoteCard(note: HashMap<String, Any?>) {
 }
 
 @Composable
-fun Header(modifier: Modifier = Modifier, title: String) {
+fun Header(modifier: Modifier = Modifier, title: String, onDelete: () -> Unit, onEdit: () -> Unit) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
@@ -102,10 +116,11 @@ fun Header(modifier: Modifier = Modifier, title: String) {
         )
 
         IconButton(onClick = {
-
+            onEdit()
         }) { Icon(Icons.Filled.Edit, contentDescription = "Edit") }
-        IconButton(onClick = {
 
+        IconButton(onClick = {
+            onDelete()
         }) { Icon(Icons.Filled.Clear, contentDescription = "Delete") }
     }
 }
