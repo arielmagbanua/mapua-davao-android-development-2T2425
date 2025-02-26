@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
+import com.example.simplenoteapp.modules.notes.data.Note
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,13 +54,13 @@ fun NoteScreen(
 
     if (!id.isNullOrEmpty()) {
         LaunchedEffect(Unit) {
-            val note = notesViewModel.readNote(id)
-
-            if (note.isNullOrEmpty()) {
-                navController.popBackStack()
-            } else {
-                title = note["title"].toString()
-                content = note["content"].toString()
+            notesViewModel.readNote(id) { note ->
+                if (note == null) {
+                    navController.popBackStack()
+                } else {
+                    title = note.title
+                    content = note.content
+                }
             }
         }
     }
@@ -92,10 +93,10 @@ fun NoteScreen(
 
             FloatingActionButton(
                 onClick = {
-                    val note = hashMapOf<String, String>(
-                        "title" to title,
-                        "content" to content,
-                        "owner" to authSate.email.toString()
+                    val note = Note(
+                        title = title,
+                        content = content,
+                        owner = authSate.email.toString(),
                     )
 
                     if (id.isNullOrEmpty()) {

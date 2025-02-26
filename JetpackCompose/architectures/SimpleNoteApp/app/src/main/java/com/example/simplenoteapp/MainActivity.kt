@@ -16,6 +16,7 @@ import com.example.simplenoteapp.modules.auth.data.AuthRepository
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 import com.example.simplenoteapp.modules.auth.ui.LoginScreen
 import com.example.simplenoteapp.modules.auth.ui.RegistrationScreen
+import com.example.simplenoteapp.modules.notes.data.FirestoreRepository
 import com.example.simplenoteapp.modules.notes.ui.NoteScreen
 import com.example.simplenoteapp.modules.notes.ui.NoteListScreen
 import com.example.simplenoteapp.modules.notes.ui.NotesViewModel
@@ -28,7 +29,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             // val authViewModel: AuthViewModel by viewModels()
             val authViewModel = AuthViewModel(authRepository = AuthRepository())
-            val notesViewModel: NotesViewModel by viewModels()
+            // val notesViewModel: NotesViewModel by viewModels()
+            val notesViewModel = NotesViewModel(notesRepository = FirestoreRepository())
 
             SimpleNoteAppTheme {
                 val authState by authViewModel.uiState.collectAsState()
