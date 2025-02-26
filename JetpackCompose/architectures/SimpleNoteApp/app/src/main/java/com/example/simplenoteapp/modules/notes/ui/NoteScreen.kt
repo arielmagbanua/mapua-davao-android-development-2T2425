@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,10 +45,24 @@ fun NoteScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     notesViewModel: NotesViewModel,
-    navController: NavController
+    navController: NavController,
+    id: String? = null
 ) {
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
+
+    if (!id.isNullOrEmpty()) {
+        LaunchedEffect(Unit) {
+            val note = notesViewModel.readNote(id)
+
+            if (note.isNullOrEmpty()) {
+                navController.popBackStack()
+            } else {
+                title = note["title"].toString()
+                content = note["content"].toString()
+            }
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -83,8 +98,13 @@ fun NoteScreen(
                         "owner" to authSate.email.toString()
                     )
 
-                    // save the note
-                    notesViewModel.addNote(note)
+                    if (id.isNullOrEmpty()) {
+                        // add the note
+                        notesViewModel.addNote(note)
+                    } else {
+                        // update the note
+                        notesViewModel.updateNote(id, note)
+                    }
 
                     // pop back to previous page
                     navController.popBackStack()

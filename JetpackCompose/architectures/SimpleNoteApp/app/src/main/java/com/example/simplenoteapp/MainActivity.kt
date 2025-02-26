@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.simplenoteapp.modules.auth.data.AuthRepository
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 import com.example.simplenoteapp.modules.auth.ui.LoginScreen
 import com.example.simplenoteapp.modules.auth.ui.RegistrationScreen
@@ -25,7 +26,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val authViewModel: AuthViewModel by viewModels()
+            // val authViewModel: AuthViewModel by viewModels()
+            val authViewModel = AuthViewModel(authRepository = AuthRepository())
             val notesViewModel: NotesViewModel by viewModels()
 
             SimpleNoteAppTheme {
@@ -60,7 +62,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable("note") {
+                    composable("note/{id}") { backStackEntry ->
+                        val id =backStackEntry.arguments?.getString("id")
+
+                        NoteScreen(
+                            authViewModel = authViewModel,
+                            navController = navController,
+                            notesViewModel = notesViewModel,
+                            id = id
+                        )
+                    }
+
+                    composable("note") { backStackEntry ->
                         NoteScreen(
                             authViewModel = authViewModel,
                             navController = navController,
