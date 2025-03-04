@@ -2,7 +2,6 @@ package com.example.jackenpoy.modules.auth.ui
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.jackenpoy.modules.auth.data.models.User
 import com.example.jackenpoy.modules.auth.domain.AuthServiceInterface
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

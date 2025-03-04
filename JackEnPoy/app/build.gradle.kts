@@ -60,6 +60,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // navigation with compose
+    implementation(libs.androidx.navigation.compose)
+
     // import the Firebase BoM
     implementation(platform(libs.firebase.bom))
 
