@@ -22,4 +22,18 @@ class FirestoreGameRepository : GameRepositoryInterface {
 
         return null
     }
+
+    override fun readGameSession(
+        gameId: String,
+        onRead: (GameSession?) -> Unit
+    ) {
+        gameSessions.document(gameId).addSnapshotListener { snapshot, _ ->
+            if (snapshot != null && snapshot.exists()) {
+                val gameSession = snapshot.toObject(GameSession::class.java)
+                onRead(gameSession)
+            } else {
+                onRead(null)
+            }
+        }
+    }
 }

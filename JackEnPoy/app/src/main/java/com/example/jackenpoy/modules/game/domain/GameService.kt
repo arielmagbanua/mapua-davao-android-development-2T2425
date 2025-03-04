@@ -10,4 +10,11 @@ class GameService @Inject constructor(
     override suspend fun createGameSession(creatorId: String): GameSession? {
         return gameRepository.createGameSession(creatorId)
     }
+
+    override fun readGameSession(
+        gameId: String,
+        onRead: (GameSession?) -> Unit
+    ) {
+        gameRepository.readGameSession(gameId, onRead)
+    }
 }

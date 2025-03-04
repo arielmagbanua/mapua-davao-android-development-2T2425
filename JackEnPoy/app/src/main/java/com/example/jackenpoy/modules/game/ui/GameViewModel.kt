@@ -20,7 +20,10 @@ class GameViewModel @Inject constructor(
     private val _gameState = MutableStateFlow(GameState())
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
 
-    fun createGameSession(creatorId: String, onCreateGameSession: ((GameSession?) -> Unit)? = null) {
+    fun createGameSession(
+        creatorId: String,
+        onCreateGameSession: ((GameSession?) -> Unit)? = null
+    ) {
         // view model scope
         viewModelScope.launch {
             val gameSession = gameService.createGameSession(creatorId)
@@ -37,7 +40,18 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun onGameSessionUpdates(gameSession: GameSession, onUpdate: (GameSession) -> Unit) {
+    fun subscribeToSessionUpdates(gameId: String, onUpdate: ((GameSession?) -> Unit)? = null) {
+        gameService.readGameSession(gameId = gameId) { gameSession ->
+            onUpdate?.invoke(gameSession)
 
+            if (gameSession != null) {
+                // update the game state'
+                _gameState.update { currentState ->
+                    currentState.copy(
+                        currentGameSession = gameSession
+                    )
+                }
+            }
+        }
     }
 }
