@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.jackenpoy.R
 import com.example.jackenpoy.modules.auth.ui.AuthViewModel
@@ -27,7 +28,7 @@ import com.example.jackenpoy.modules.auth.ui.AuthViewModel
 fun SessionsScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel = hiltViewModel(),
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
