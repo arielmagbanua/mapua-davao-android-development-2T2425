@@ -13,6 +13,17 @@ class AuthViewModel(private val authService: AuthServiceInterface) : ViewModel()
     private val _authState = MutableStateFlow(AuthState())
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
+    init {
+        val user = authService.getAuthenticatedUser()
+        if (user != null) {
+            _authState.update { currentState ->
+                currentState.copy(
+                    currentUser = user
+                )
+            }
+        }
+    }
+
     fun signInWithGoogle(context: Context) {
         authService.signInWithGoogle(context = context) { user ->
             _authState.update { currentState ->
@@ -20,6 +31,15 @@ class AuthViewModel(private val authService: AuthServiceInterface) : ViewModel()
                     currentUser = user
                 )
             }
+        }
+    }
+
+    fun logout() {
+        authService.logout()
+        _authState.update { currentState ->
+            currentState.copy(
+                currentUser = null
+            )
         }
     }
 }

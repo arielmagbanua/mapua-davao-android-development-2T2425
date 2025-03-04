@@ -11,4 +11,6 @@ interface AuthServiceInterface {
     )
 
     fun getAuthenticatedUser(): User?
+
+    fun logout()
 }
