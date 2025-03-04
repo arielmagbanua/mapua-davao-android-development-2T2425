@@ -1,12 +1,16 @@
 package com.example.jackenpoy.modules.game.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +33,7 @@ fun SessionsScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel = hiltViewModel(),
+    gameViewModel: GameViewModel = hiltViewModel()
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -53,9 +58,30 @@ fun SessionsScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                // get the current user
+                val currentUser = authViewModel.getCurrentUser()
+
+                // create a new game
+                gameViewModel.createGameSession(currentUser?.id.toString()) { gameSession ->
+                    if (gameSession != null) {
+                        // navigate to the game screen with the correct session id
+                        Log.d("SessionsScreen", "Game session created with id: ${gameSession.id}")
+                    }
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Default.AddCircle,
+                    contentDescription = stringResource(R.string.create_match)
+                )
+            }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).safeContentPadding()) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .safeContentPadding()) {
 
         }
     }

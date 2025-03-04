@@ -1,4 +1,4 @@
-package com.example.jackenpoy.modules.auth.data
+package com.example.jackenpoy.modules.auth.data.repositories
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth

@@ -2,6 +2,7 @@ package com.example.jackenpoy.modules.auth.ui
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.example.jackenpoy.modules.auth.data.models.User
 import com.example.jackenpoy.modules.auth.domain.AuthServiceInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,10 @@ class AuthViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun getCurrentUser(): User? {
+        return authService.getAuthenticatedUser()
     }
 
     fun signInWithGoogle(context: Context) {

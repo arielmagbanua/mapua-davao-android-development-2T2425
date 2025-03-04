@@ -1,6 +1,5 @@
-package com.example.jackenpoy.modules.auth.data
+package com.example.jackenpoy.modules.auth.data.repositories
 
-import android.content.Context
 import com.google.firebase.auth.FirebaseUser
 
 interface AuthRepositoryInterface {

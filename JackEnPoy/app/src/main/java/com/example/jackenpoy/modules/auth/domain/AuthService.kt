@@ -10,7 +10,7 @@ import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import com.example.jackenpoy.R
-import com.example.jackenpoy.modules.auth.data.AuthRepositoryInterface
+import com.example.jackenpoy.modules.auth.data.repositories.AuthRepositoryInterface
 import com.example.jackenpoy.modules.auth.data.models.User
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
