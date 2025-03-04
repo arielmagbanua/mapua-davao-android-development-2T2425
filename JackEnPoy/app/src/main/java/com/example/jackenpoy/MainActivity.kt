@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jackenpoy.modules.auth.ui.AuthViewModel
 import com.example.jackenpoy.modules.auth.ui.LoginScreen
+import com.example.jackenpoy.modules.game.ui.GameViewModel
 import com.example.jackenpoy.modules.game.ui.SessionsScreen
 import com.example.jackenpoy.ui.theme.JackEnPoyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,10 +25,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             JackEnPoyTheme {
                 val authViewModel: AuthViewModel = hiltViewModel()
+                val gameViewModel: GameViewModel = hiltViewModel()
 
                 val authState by authViewModel.authState.collectAsState()
+                val gameState by gameViewModel.gameState.collectAsState()
 
-                val startDestination = if (authState.currentUser != null) "sessions" else "login"
+                var startDestination = "sessions"
+                if (authState.currentUser == null) {
+                    startDestination = "login"
+                } else if (gameState.currentGameSession != null) {
+                    // user has current joined the game
+                    startDestination = "game"
+                }
+
                 val navController = rememberNavController()
 
                 NavHost(
@@ -39,6 +49,10 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("sessions") {
+                        SessionsScreen(navController = navController)
+                    }
+
+                    composable("game") {
                         SessionsScreen(navController = navController)
                     }
                 }

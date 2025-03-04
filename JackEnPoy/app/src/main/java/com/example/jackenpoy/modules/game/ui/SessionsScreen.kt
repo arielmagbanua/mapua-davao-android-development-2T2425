@@ -67,7 +67,8 @@ fun SessionsScreen(
                 // create a new game
                 gameViewModel.createGameSession(currentUser?.id.toString()) { gameSession ->
                     if (gameSession != null) {
-                        // navigate to the game screen with the correct session id
+                        // join the game
+                        gameViewModel.joinGameSession(gameSession)
                         Log.d("SessionsScreen", "Game session created with id: ${gameSession.id}")
                     }
                 }
