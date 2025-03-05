@@ -6,4 +6,6 @@ interface GameRepositoryInterface {
     suspend fun createGameSession(creatorId: String): GameSession?
 
     fun readGameSession(gameId: String, onRead: (GameSession?) -> Unit)
+
+    fun updateGameSession(gameId: String, updated: GameSession)
 }

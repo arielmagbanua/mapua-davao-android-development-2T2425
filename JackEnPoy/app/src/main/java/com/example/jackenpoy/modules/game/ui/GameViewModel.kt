@@ -40,7 +40,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun subscribeToSessionUpdates(gameId: String, onUpdate: ((GameSession?) -> Unit)? = null) {
+    fun subscribeToSessionUpdates(creatorId: String, gameId: String, onUpdate: ((GameSession?) -> Unit)? = null) {
         gameService.readGameSession(gameId = gameId) { gameSession ->
             onUpdate?.invoke(gameSession)
 
@@ -53,5 +53,9 @@ class GameViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun updateGameSession(gameId: String, updated: GameSession) {
+        gameService.updateGameSession(gameId, updated)
     }
 }

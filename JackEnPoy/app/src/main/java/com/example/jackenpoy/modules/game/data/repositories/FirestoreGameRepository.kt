@@ -14,10 +14,13 @@ class FirestoreGameRepository : GameRepositoryInterface {
         val gameSession = GameSession(creatorId = creatorId)
         val docRef = gameSessions.add(gameSession).await()
 
-        val docSnapshot = docRef.get().await()
-        if (docSnapshot.exists()) {
+        val snapshot = docRef.get().await()
+        if (snapshot.exists()) {
             // convert and serialize to game session
-            return docSnapshot.toObject(GameSession::class.java)
+            var gameSession = snapshot.toObject(GameSession::class.java)
+            gameSession = gameSession?.copy(id = snapshot.id)
+
+            return gameSession
         }
 
         return null
@@ -29,11 +32,20 @@ class FirestoreGameRepository : GameRepositoryInterface {
     ) {
         gameSessions.document(gameId).addSnapshotListener { snapshot, _ ->
             if (snapshot != null && snapshot.exists()) {
-                val gameSession = snapshot.toObject(GameSession::class.java)
+                var gameSession = snapshot.toObject(GameSession::class.java)
+                gameSession = gameSession?.copy(id = snapshot.id)
+
                 onRead(gameSession)
             } else {
                 onRead(null)
             }
         }
+    }
+
+    override fun updateGameSession(
+        gameId: String,
+        updated: GameSession
+    ) {
+        gameSessions.document(gameId).set(updated.toMap())
     }
 }

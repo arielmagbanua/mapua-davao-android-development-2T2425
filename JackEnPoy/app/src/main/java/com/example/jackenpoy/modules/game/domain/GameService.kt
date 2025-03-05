@@ -17,4 +17,11 @@ class GameService @Inject constructor(
     ) {
         gameRepository.readGameSession(gameId, onRead)
     }
+
+    override fun updateGameSession(
+        gameId: String,
+        updated: GameSession
+    ) {
+        gameRepository.updateGameSession(gameId, updated)
+    }
 }
