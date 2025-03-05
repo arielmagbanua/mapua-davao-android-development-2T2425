@@ -79,10 +79,10 @@ fun CreatorGameScreen(
         )
 
         // notify
-        Toast.makeText(LocalContext.current, message, Toast.LENGTH_LONG).show()
-
-        // exit the game
-        gameViewModel.exitGameSession()
+        GameOverDialog(message = message, onDismissRequest = {}) {
+            // exit the game
+            gameViewModel.exitGameSession()
+        }
     }
 
     // setup game updates
