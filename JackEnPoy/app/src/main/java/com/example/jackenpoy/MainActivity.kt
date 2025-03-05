@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jackenpoy.modules.auth.ui.AuthViewModel
 import com.example.jackenpoy.modules.auth.ui.LoginScreen
-import com.example.jackenpoy.modules.game.ui.GameScreen
+import com.example.jackenpoy.modules.game.ui.CreatorGameScreen
 import com.example.jackenpoy.modules.game.ui.GameViewModel
 import com.example.jackenpoy.modules.game.ui.SessionsScreen
 import com.example.jackenpoy.ui.theme.JackEnPoyTheme
@@ -54,7 +54,11 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("game") {
-                        GameScreen()
+                        if (gameState.currentGameSession?.creatorId == authState.currentUser?.id) {
+                            CreatorGameScreen()
+                        } else {
+
+                        }
                     }
                 }
             }

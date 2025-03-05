@@ -13,6 +13,19 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class Hand(val code: Int) {
+    ROCK(1),
+    PAPER(2),
+    SCISSORS(3),
+    NONE(0);
+
+    companion object {
+        private val map = Hand.entries.associateBy(Hand::code)
+
+        fun fromCode(code: Int): Hand? = map[code]
+    }
+}
+
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val gameService: GameServiceInterface
@@ -84,5 +97,38 @@ class GameViewModel @Inject constructor(
 
     fun readOpenGameSessions(currentUserId: String, onRead: (List<GameSession>) -> Unit) {
         gameService.readOpenGameSessions(currentUserId, onRead)
+    }
+
+    // if true hand1 is the winner
+    fun determineWinner(hand1: Hand, hand2: Hand): Boolean? {
+        if (hand1 == hand2) {
+            return null // tie
+        }
+
+        if (hand1 == Hand.SCISSORS && hand2 == Hand.PAPER) {
+            return true
+        }
+
+        if (hand1 == Hand.SCISSORS && hand2 == Hand.ROCK) {
+            return false
+        }
+
+        if (hand1 == Hand.ROCK && hand2 == Hand.SCISSORS) {
+            return true
+        }
+
+        if (hand1 == Hand.ROCK && hand2 == Hand.PAPER) {
+            return false
+        }
+
+        if (hand1 == Hand.PAPER && hand2 == Hand.ROCK) {
+            return true
+        }
+
+        if (hand1 == Hand.PAPER && hand2 == Hand.SCISSORS) {
+            return false
+        }
+
+        return null
     }
 }
