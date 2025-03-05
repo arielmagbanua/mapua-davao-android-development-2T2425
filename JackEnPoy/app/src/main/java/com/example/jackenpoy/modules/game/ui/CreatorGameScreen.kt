@@ -75,7 +75,7 @@ fun CreatorGameScreen(
         }
     ) { paddingValues ->
         // reveal hand state
-        var revealHands by rememberSaveable { mutableStateOf(false) }
+        var revealHands by rememberSaveable { mutableStateOf(if (currentGameSession == null) false else currentGameSession.showHands) }
 
         Column(
             modifier = Modifier
@@ -142,6 +142,10 @@ fun CreatorGameScreen(
 
                                 // update
                                 if (gameSession != null) {
+                                    gameSession = gameSession.copy(
+                                        showHands = true // show the hands
+                                    )
+
                                     gameViewModel.updateGameSession(
                                         gameSession.id.toString(),
                                         gameSession
@@ -151,7 +155,8 @@ fun CreatorGameScreen(
                                 // reset hands
                                 var gameSession = gameState.currentGameSession?.copy(
                                     creatorHand = Hand.NONE.code,
-                                    opponentHand = Hand.NONE.code
+                                    opponentHand = Hand.NONE.code,
+                                    showHands = false // hide the hands
                                 )
 
                                 // update

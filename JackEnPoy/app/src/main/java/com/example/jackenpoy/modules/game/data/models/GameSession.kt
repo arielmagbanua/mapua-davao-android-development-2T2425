@@ -11,7 +11,8 @@ data class GameSession(
     val winnerId: String? = null,
     val rounds: Int = 5,
     val creatorWins: Int = 0,
-    val opponentWins: Int = 0
+    val opponentWins: Int = 0,
+    val showHands: Boolean = false
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -25,7 +26,8 @@ data class GameSession(
             "winnerId" to winnerId,
             "rounds" to rounds,
             "creatorWins" to creatorWins,
-            "opponentWins" to opponentWins
+            "opponentWins" to opponentWins,
+            "showHands" to showHands
         )
     }
 }
