@@ -28,16 +28,31 @@ class FirestoreGameRepository : GameRepositoryInterface {
 
     override fun readGameSession(
         gameId: String,
+        readOnce: Boolean,
         onRead: (GameSession?) -> Unit
     ) {
-        gameSessions.document(gameId).addSnapshotListener { snapshot, _ ->
-            if (snapshot != null && snapshot.exists()) {
-                var gameSession = snapshot.toObject(GameSession::class.java)
-                gameSession = gameSession?.copy(id = snapshot.id)
+        val docRef = gameSessions.document(gameId)
+
+        if (!readOnce) {
+            docRef.addSnapshotListener { snapshot, _ ->
+                if (snapshot != null && snapshot.exists()) {
+                    var gameSession = snapshot.toObject(GameSession::class.java)
+                    gameSession = gameSession?.copy(id = snapshot.id)
+
+                    onRead(gameSession)
+                } else {
+                    onRead(null)
+                }
+            }
+            return
+        }
+
+        docRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                var gameSession = task.result.toObject(GameSession::class.java)
+                gameSession = gameSession?.copy(id = task.result.id)
 
                 onRead(gameSession)
-            } else {
-                onRead(null)
             }
         }
     }
@@ -49,25 +64,28 @@ class FirestoreGameRepository : GameRepositoryInterface {
         gameSessions.document(gameId).set(updated.toMap())
     }
 
-    override fun readOpenGameSessions(onRead: (List<GameSession>) -> Unit) {
-        gameSessions.whereEqualTo("creatorId", null).addSnapshotListener { snapshot, _ ->
-            if (snapshot != null) {
-                val sessionDocs = snapshot.documents
-                var sessions = emptyList<GameSession>()
+    override fun readOpenGameSessions(currentUserId: String, onRead: (List<GameSession>) -> Unit) {
+        gameSessions.whereNotEqualTo("creatorId", currentUserId)
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    val sessionDocs = snapshot.documents
+                    var sessions = emptyList<GameSession>()
 
-                if (sessionDocs.isEmpty()) {
+                    if (sessionDocs.isEmpty()) {
+                        onRead(sessions)
+                        return@addSnapshotListener
+                    }
+
+                    // only display game session that doesn't have any opponent
+                    sessions = sessionDocs.filter { it.getString("opponentId") == null }
+                        .map {
+                            var gameSession = it.toObject(GameSession::class.java)
+                            gameSession = gameSession?.copy(id = it.id)
+                            gameSession as GameSession
+                        }
+
                     onRead(sessions)
-                    return@addSnapshotListener
                 }
-
-                sessions = sessionDocs.map {
-                    var gameSession = it.toObject(GameSession::class.java)
-                    gameSession = gameSession?.copy(id = it.id)
-                    gameSession as GameSession
-                }
-
-                onRead(sessions)
             }
-        }
     }
 }

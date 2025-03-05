@@ -13,9 +13,10 @@ class GameService @Inject constructor(
 
     override fun readGameSession(
         gameId: String,
+        readOnce: Boolean,
         onRead: (GameSession?) -> Unit
     ) {
-        gameRepository.readGameSession(gameId, onRead)
+        gameRepository.readGameSession(gameId, readOnce, onRead)
     }
 
     override fun updateGameSession(
@@ -25,7 +26,7 @@ class GameService @Inject constructor(
         gameRepository.updateGameSession(gameId, updated)
     }
 
-    override fun readOpenGameSessions(onRead: (List<GameSession>) -> Unit) {
-        gameRepository.readOpenGameSessions(onRead)
+    override fun readOpenGameSessions(currentUserId: String, onRead: (List<GameSession>) -> Unit) {
+        gameRepository.readOpenGameSessions(currentUserId, onRead)
     }
 }

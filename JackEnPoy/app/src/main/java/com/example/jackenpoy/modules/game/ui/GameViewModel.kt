@@ -2,6 +2,7 @@ package com.example.jackenpoy.modules.game.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jackenpoy.modules.auth.data.models.User
 import com.example.jackenpoy.modules.game.data.models.GameSession
 import com.example.jackenpoy.modules.game.domain.GameServiceInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,8 +41,30 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun subscribeToSessionUpdates(creatorId: String, gameId: String, onUpdate: ((GameSession?) -> Unit)? = null) {
-        gameService.readGameSession(gameId = gameId) { gameSession ->
+    // join game session as opponent
+    fun joinGameSession(gameId: String, opponent: User) {
+        gameService.readGameSession(gameId = gameId, readOnce = true) { gameSession ->
+            if (gameSession != null) {
+
+                // update the game session
+                val updatedGameSession = gameSession.copy(
+                    opponentId = opponent.id,
+                    opponentDisplayName = opponent.name,
+                )
+                gameService.updateGameSession(gameId, updatedGameSession)
+
+                // update the game state
+                _gameState.update { currentState ->
+                    currentState.copy(
+                        currentGameSession = updatedGameSession
+                    )
+                }
+            }
+        }
+    }
+
+    fun subscribeToSessionUpdates(gameId: String, onUpdate: ((GameSession?) -> Unit)? = null) {
+        gameService.readGameSession(gameId = gameId, readOnce = false) { gameSession ->
             onUpdate?.invoke(gameSession)
 
             if (gameSession != null) {
@@ -59,7 +82,7 @@ class GameViewModel @Inject constructor(
         gameService.updateGameSession(gameId, updated)
     }
 
-    fun readOpenGameSessions(onRead: (List<GameSession>) -> Unit) {
-        gameService.readOpenGameSessions(onRead)
+    fun readOpenGameSessions(currentUserId: String, onRead: (List<GameSession>) -> Unit) {
+        gameService.readOpenGameSessions(currentUserId, onRead)
     }
 }

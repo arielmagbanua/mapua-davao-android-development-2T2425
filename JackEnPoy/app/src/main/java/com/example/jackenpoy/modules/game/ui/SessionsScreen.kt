@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -43,6 +44,9 @@ fun SessionsScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
     gameViewModel: GameViewModel = hiltViewModel()
 ) {
+    // get the current user
+    val currentUser = authViewModel.getCurrentUser()
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -69,9 +73,6 @@ fun SessionsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                // get the current user
-                val currentUser = authViewModel.getCurrentUser()
-
                 // create a new game
                 gameViewModel.createGameSession(currentUser?.id.toString()) { gameSession ->
                     if (gameSession != null) {
@@ -92,7 +93,7 @@ fun SessionsScreen(
 
         LaunchedEffect(Unit) {
             // read updates of all sessions here
-            gameViewModel.readOpenGameSessions { sessions ->
+            gameViewModel.readOpenGameSessions(currentUser?.id.toString()) { sessions ->
                 availableSessions = sessions
             }
         }
@@ -105,7 +106,33 @@ fun SessionsScreen(
                 availableSessions.size,
                 key = { index -> availableSessions[index].id.toString() }
             ) { index ->
-
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = availableSessions[index].creatorDisplayName.toString(),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = "Rounds: " + availableSessions[index].rounds.toString(),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    },
+                    trailingContent = {
+                        if (currentUser != null) {
+                            Button(
+                                onClick = {
+                                    // join as opponent
+                                    gameViewModel.joinGameSession(
+                                        gameId = availableSessions[index].id.toString(),
+                                        opponent = currentUser
+                                    )
+                                },
+                            ) { Text("Join") }
+                        }
+                    }
+                )
             }
         }
     }

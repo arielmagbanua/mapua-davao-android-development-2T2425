@@ -68,10 +68,8 @@ fun GameScreen(
     // setup game updates
     LaunchedEffect(Unit) {
         gameViewModel.subscribeToSessionUpdates(
-            authViewModel.getCurrentUser()?.id.toString(),
             gameState.currentGameSession?.id.toString()
         ) { updatedSession ->
-
             currentPlayerChoice = if (updatedSession == null) Choice.NONE else Choice.fromCode(
                 updatedSession.creatorHand
             ) ?: Choice.NONE
@@ -138,8 +136,8 @@ fun GameScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                ChoiceButtons(modifier = Modifier.fillMaxWidth()) {
-                    it -> currentPlayerChoice = it
+                ChoiceButtons(modifier = Modifier.fillMaxWidth()) { it ->
+                    currentPlayerChoice = it
                 }
             }
         }
