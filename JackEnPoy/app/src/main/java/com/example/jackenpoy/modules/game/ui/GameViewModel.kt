@@ -58,4 +58,8 @@ class GameViewModel @Inject constructor(
     fun updateGameSession(gameId: String, updated: GameSession) {
         gameService.updateGameSession(gameId, updated)
     }
+
+    fun readOpenGameSessions(onRead: (List<GameSession>) -> Unit) {
+        gameService.readOpenGameSessions(onRead)
+    }
 }

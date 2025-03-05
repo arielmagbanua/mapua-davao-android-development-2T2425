@@ -48,4 +48,26 @@ class FirestoreGameRepository : GameRepositoryInterface {
     ) {
         gameSessions.document(gameId).set(updated.toMap())
     }
+
+    override fun readOpenGameSessions(onRead: (List<GameSession>) -> Unit) {
+        gameSessions.whereEqualTo("creatorId", null).addSnapshotListener { snapshot, _ ->
+            if (snapshot != null) {
+                val sessionDocs = snapshot.documents
+                var sessions = emptyList<GameSession>()
+
+                if (sessionDocs.isEmpty()) {
+                    onRead(sessions)
+                    return@addSnapshotListener
+                }
+
+                sessions = sessionDocs.map {
+                    var gameSession = it.toObject(GameSession::class.java)
+                    gameSession = gameSession?.copy(id = it.id)
+                    gameSession as GameSession
+                }
+
+                onRead(sessions)
+            }
+        }
+    }
 }

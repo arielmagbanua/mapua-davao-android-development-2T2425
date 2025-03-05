@@ -6,7 +6,10 @@ data class GameSession(
     val creatorHand: Int = 0,
     val opponentId: String? = null,
     val opponentHand: Int = 0,
-    val winnerId: String? = null
+    val winnerId: String? = null,
+    val rounds: Int = 5,
+    val creatorWins: Int = 0,
+    val opponentWins: Int = 0
 ) {
     fun toMap(withId: Boolean = false): Map<String, Any?> {
         if (withId) {
@@ -16,7 +19,10 @@ data class GameSession(
                 "creatorHand" to creatorHand,
                 "opponentId" to opponentId,
                 "opponentHand" to opponentHand,
-                "winnerId" to winnerId
+                "winnerId" to winnerId,
+                "rounds" to rounds,
+                "creatorWins" to creatorWins,
+                "opponentWins" to opponentWins
             )
         }
 
@@ -25,7 +31,10 @@ data class GameSession(
             "creatorHand" to creatorHand,
             "opponentId" to opponentId,
             "opponentHand" to opponentHand,
-            "winnerId" to winnerId
+            "winnerId" to winnerId,
+            "rounds" to rounds,
+            "creatorWins" to creatorWins,
+            "opponentWins" to opponentWins
         )
     }
 }

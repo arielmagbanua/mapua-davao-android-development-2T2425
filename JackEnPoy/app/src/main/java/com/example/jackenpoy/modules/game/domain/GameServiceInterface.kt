@@ -8,4 +8,6 @@ interface GameServiceInterface {
     fun readGameSession(gameId: String, onRead: (GameSession?) -> Unit)
 
     fun updateGameSession(gameId: String, updated: GameSession)
+
+    fun readOpenGameSessions(onRead: (List<GameSession>) -> Unit)
 }
