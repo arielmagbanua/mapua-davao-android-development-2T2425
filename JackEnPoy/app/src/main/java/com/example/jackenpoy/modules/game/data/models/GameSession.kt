@@ -9,7 +9,7 @@ data class GameSession(
     val opponentHand: Int = 0,
     val opponentDisplayName: String? = null,
     val winnerId: String? = null,
-    val rounds: Int = 5,
+    val rounds: Int = 3,
     val creatorWins: Int = 0,
     val opponentWins: Int = 0,
     val showHands: Boolean = false

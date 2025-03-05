@@ -9,9 +9,12 @@ class FirestoreGameRepository : GameRepositoryInterface {
     private val db = Firebase.firestore
     private val gameSessions = db.collection("sessions")
 
-    override suspend fun createGameSession(creatorId: String): GameSession? {
+    override suspend fun createGameSession(creatorId: String, creatorDisplayName: String?): GameSession? {
         // create game session
-        val gameSession = GameSession(creatorId = creatorId)
+        val gameSession = GameSession(
+            creatorId = creatorId,
+            creatorDisplayName = creatorDisplayName
+        )
         val docRef = gameSessions.add(gameSession).await()
 
         val snapshot = docRef.get().await()

@@ -3,7 +3,7 @@ package com.example.jackenpoy.modules.game.domain
 import com.example.jackenpoy.modules.game.data.models.GameSession
 
 interface GameServiceInterface {
-    suspend fun createGameSession(creatorId: String): GameSession?
+    suspend fun createGameSession(creatorId: String, creatorDisplayName: String? = null): GameSession?
 
     fun readGameSession(gameId: String, readOnce: Boolean = false, onRead: (GameSession?) -> Unit)
 

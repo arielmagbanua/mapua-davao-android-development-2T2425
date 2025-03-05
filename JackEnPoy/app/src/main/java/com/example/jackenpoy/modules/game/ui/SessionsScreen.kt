@@ -74,7 +74,10 @@ fun SessionsScreen(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 // create a new game
-                gameViewModel.createGameSession(currentUser?.id.toString()) { gameSession ->
+                gameViewModel.createGameSession(
+                    currentUser?.id.toString(),
+                    currentUser?.name.toString()
+                ) { gameSession ->
                     if (gameSession != null) {
                         // join the game
                         gameViewModel.joinGameSession(gameSession)

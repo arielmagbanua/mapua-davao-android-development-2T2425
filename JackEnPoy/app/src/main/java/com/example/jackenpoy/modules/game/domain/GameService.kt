@@ -7,8 +7,8 @@ import javax.inject.Inject
 class GameService @Inject constructor(
     private val gameRepository: GameRepositoryInterface
 ) : GameServiceInterface {
-    override suspend fun createGameSession(creatorId: String): GameSession? {
-        return gameRepository.createGameSession(creatorId)
+    override suspend fun createGameSession(creatorId: String, creatorDisplayName: String?): GameSession? {
+        return gameRepository.createGameSession(creatorId, creatorDisplayName)
     }
 
     override fun readGameSession(

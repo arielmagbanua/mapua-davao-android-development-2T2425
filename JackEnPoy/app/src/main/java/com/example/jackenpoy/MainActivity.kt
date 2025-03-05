@@ -14,6 +14,7 @@ import com.example.jackenpoy.modules.auth.ui.AuthViewModel
 import com.example.jackenpoy.modules.auth.ui.LoginScreen
 import com.example.jackenpoy.modules.game.ui.CreatorGameScreen
 import com.example.jackenpoy.modules.game.ui.GameViewModel
+import com.example.jackenpoy.modules.game.ui.OpponentGameScreen
 import com.example.jackenpoy.modules.game.ui.SessionsScreen
 import com.example.jackenpoy.ui.theme.JackEnPoyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity() {
                         if (gameState.currentGameSession?.creatorId == authState.currentUser?.id) {
                             CreatorGameScreen()
                         } else {
-
+                            OpponentGameScreen()
                         }
                     }
                 }

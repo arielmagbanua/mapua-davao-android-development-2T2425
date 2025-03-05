@@ -36,11 +36,12 @@ class GameViewModel @Inject constructor(
 
     fun createGameSession(
         creatorId: String,
+        creatorDisplayName: String? = null,
         onCreateGameSession: ((GameSession?) -> Unit)? = null
     ) {
         // view model scope
         viewModelScope.launch {
-            val gameSession = gameService.createGameSession(creatorId)
+            val gameSession = gameService.createGameSession(creatorId, creatorDisplayName)
             onCreateGameSession?.invoke(gameSession)
         }
     }
@@ -130,5 +131,14 @@ class GameViewModel @Inject constructor(
         }
 
         return null
+    }
+
+    fun exitGameSession() {
+        // update the game state
+        _gameState.update { currentState ->
+            currentState.copy(
+                currentGameSession = null
+            )
+        }
     }
 }
