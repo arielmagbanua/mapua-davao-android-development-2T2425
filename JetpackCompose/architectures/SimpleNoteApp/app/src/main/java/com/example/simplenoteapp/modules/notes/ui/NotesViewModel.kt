@@ -3,8 +3,13 @@ package com.example.simplenoteapp.modules.notes.ui
 import androidx.lifecycle.ViewModel
 import com.example.simplenoteapp.modules.notes.data.DataRepositoryInterface
 import com.example.simplenoteapp.modules.notes.data.Note
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class NotesViewModel(private val notesRepository: DataRepositoryInterface) : ViewModel() {
+@HiltViewModel
+class NotesViewModel @Inject constructor(
+    private val notesRepository: DataRepositoryInterface
+) : ViewModel() {
     fun addNote(note: Note, onAdd: ((successful: Boolean) -> Unit)? = null) {
         notesRepository.addNote(note) { success ->
             onAdd?.invoke(success)

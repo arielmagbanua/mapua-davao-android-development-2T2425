@@ -5,6 +5,9 @@ plugins {
 
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -83,4 +86,13 @@ dependencies {
 
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.firebase.firestore)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

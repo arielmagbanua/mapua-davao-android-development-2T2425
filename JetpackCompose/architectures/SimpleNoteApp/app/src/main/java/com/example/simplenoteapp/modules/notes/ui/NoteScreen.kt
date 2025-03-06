@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 import com.example.simplenoteapp.modules.notes.data.Note
@@ -44,8 +45,8 @@ import com.example.simplenoteapp.modules.notes.data.Note
 @Composable
 fun NoteScreen(
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel,
-    notesViewModel: NotesViewModel,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    notesViewModel: NotesViewModel = hiltViewModel(),
     navController: NavController,
     id: String? = null
 ) {

@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.simplenoteapp.modules.auth.ui.AuthViewModel
 import com.example.simplenoteapp.modules.notes.data.Note
@@ -29,8 +30,8 @@ import com.example.simplenoteapp.modules.notes.data.Note
 @Composable
 fun NoteListScreen(
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel,
-    notesViewModel: NotesViewModel,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    notesViewModel: NotesViewModel = hiltViewModel(),
     navController: NavController
 ) {
     Scaffold(

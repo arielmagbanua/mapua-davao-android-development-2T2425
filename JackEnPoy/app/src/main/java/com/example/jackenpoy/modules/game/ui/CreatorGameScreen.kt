@@ -61,7 +61,7 @@ fun CreatorGameScreen(
         if (currentGameSession.creatorWins > currentGameSession.opponentWins) {
             // update the winner id
             gameSession = gameSession.copy(
-                winnerId = gameSession.winnerId
+                winnerId = gameSession.creatorId
             )
         } else {
             // update the winner id

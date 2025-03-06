@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,16 +22,16 @@ import com.example.simplenoteapp.modules.notes.ui.NoteScreen
 import com.example.simplenoteapp.modules.notes.ui.NoteListScreen
 import com.example.simplenoteapp.modules.notes.ui.NotesViewModel
 import com.example.simplenoteapp.ui.theme.SimpleNoteAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // val authViewModel: AuthViewModel by viewModels()
-            val authViewModel = AuthViewModel(authRepository = AuthRepository())
-            // val notesViewModel: NotesViewModel by viewModels()
-            val notesViewModel = NotesViewModel(notesRepository = FirestoreRepository())
+            val authViewModel: AuthViewModel = hiltViewModel()
+            val notesViewModel: NotesViewModel = hiltViewModel()
 
             SimpleNoteAppTheme {
                 val authState by authViewModel.uiState.collectAsState()
@@ -45,21 +46,17 @@ class MainActivity : ComponentActivity() {
                     composable("login") {
                         LoginScreen(
                             navController = navController,
-                            authViewModel = authViewModel
                         )
                     }
 
                     composable("notes-list") {
                         NoteListScreen(
-                            authViewModel = authViewModel,
                             navController = navController,
-                            notesViewModel = notesViewModel
                         )
                     }
 
                     composable("registration") {
                         RegistrationScreen(
-                            authViewModel = authViewModel,
                             navController = navController
                         )
                     }
@@ -68,18 +65,14 @@ class MainActivity : ComponentActivity() {
                         val id =backStackEntry.arguments?.getString("id")
 
                         NoteScreen(
-                            authViewModel = authViewModel,
                             navController = navController,
-                            notesViewModel = notesViewModel,
                             id = id
                         )
                     }
 
                     composable("note") { backStackEntry ->
                         NoteScreen(
-                            authViewModel = authViewModel,
                             navController = navController,
-                            notesViewModel = notesViewModel
                         )
                     }
                 }

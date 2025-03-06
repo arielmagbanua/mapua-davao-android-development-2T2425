@@ -21,12 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 @Composable
 fun RegistrationScreen(
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel = hiltViewModel(),
     navController: NavController
 ) {
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
